@@ -16,7 +16,7 @@ public class App extends Application {
         Supra.init(this);
 
         ModelManager modelManager = Supra.getControler(ModelManager.class);
-        UserIdentifier uIdentifier = new UserIdentifier(userId);
-        User user = modelManager.getObj(uIdentifier);
+//        UserIdentifier uIdentifier = new UserIdentifier(userId);
+//        User user = modelManager.getObj(uIdentifier);
     }
 }
