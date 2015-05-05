@@ -1,7 +1,7 @@
 # Supower
 **__Supra powered framework lib for android;__**
 
-**__超能力开发开源框架；__**
+**__Supower Android开发框架；__**
 
 **Supower** Android 应用开发框架，提供了对**AppController**的抽象；实现了对应用级别单例Controller的维护和管理；在此基础上框架提供了**ModelManager**和**NetworkCenter**这两个**AppController**框架；除此之外使用者还可以继承"AppController"实现自己的Controller；
 
