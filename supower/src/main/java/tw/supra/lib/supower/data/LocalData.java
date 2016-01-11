@@ -21,7 +21,7 @@ public abstract class LocalData {
     public final int mVersion;
     public final String mName;
     public final Context mCtx;
-    private final SQLiteOpenHelper DB_HELPER;
+    private final SQLiteOpenHelper mDbHelper;
 
     private SQLiteDatabase mTmpDbOnInitializing;
 
@@ -37,7 +37,7 @@ public abstract class LocalData {
         mVersion = version;
         mCtx = ctx.getApplicationContext();
         String dbName = mName.endsWith(DB_SUB_FIX) ? mName : mName + DB_SUB_FIX;
-        DB_HELPER = new SQLiteOpenHelper(mCtx, dbName, null, mVersion) {
+        mDbHelper = new SQLiteOpenHelper(mCtx, dbName, null, mVersion) {
 
             @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
             @Override
@@ -105,7 +105,7 @@ public abstract class LocalData {
     public abstract void onDbUpgrade(SQLiteDatabase db, int oldVersion, int newVersion);
 
     public void close() {
-        DB_HELPER.close();
+        mDbHelper.close();
     }
 
     /**
@@ -114,7 +114,7 @@ public abstract class LocalData {
      * @return 本地数据的db对象
      */
     public SQLiteDatabase getDb() {
-        return mTmpDbOnInitializing == null ? DB_HELPER.getWritableDatabase() : mTmpDbOnInitializing;
+        return mTmpDbOnInitializing == null ? mDbHelper.getWritableDatabase() : mTmpDbOnInitializing;
     }
 
     public SmartPreferences getPreferences(){
