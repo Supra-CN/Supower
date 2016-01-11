@@ -17,13 +17,10 @@ public abstract class LocalData {
     public static final String ENABLE_DB_FOREIGN_KEY = "PRAGMA foreign_keys=ON;";
     private static final String LOG_TAG = LocalData.class.getSimpleName();
     private static final String DB_SUB_FIX = ".db";
-    private static final String PRE_FIX_ADJUST = "supra";
 
-    public final String PRE_FIX;
-    public final int VERSION;
-    public final String NAME;
-    public final String DATA_NAME;
-    public final Context CONTEXT;
+    public final int mVersion;
+    public final String mName;
+    public final Context mCtx;
     private final SQLiteOpenHelper DB_HELPER;
 
     private SQLiteDatabase mTmpDbOnInitializing;
@@ -32,17 +29,15 @@ public abstract class LocalData {
         this(context, null, name, version);
     }
 
-    protected LocalData(Context context, String prefix, String name, int version) {
+    protected LocalData(Context ctx, String prefix, String name, int version) {
         checkName(name);
         checkVersion(version);
-        checkContext(context);
-        NAME = name;
-        VERSION = version;
-        CONTEXT = context.getApplicationContext();
-        PRE_FIX = TextUtils.isEmpty(prefix) ? PRE_FIX_ADJUST : prefix;
-        DATA_NAME = PRE_FIX + "_" + NAME;
-        String dbName = (DATA_NAME.endsWith(DB_SUB_FIX) ? DATA_NAME : DATA_NAME + DB_SUB_FIX);
-        DB_HELPER = new SQLiteOpenHelper(CONTEXT, dbName, null, VERSION) {
+        checkContext(ctx);
+        mName = name;
+        mVersion = version;
+        mCtx = ctx.getApplicationContext();
+        String dbName = mName.endsWith(DB_SUB_FIX) ? mName : mName + DB_SUB_FIX;
+        DB_HELPER = new SQLiteOpenHelper(mCtx, dbName, null, mVersion) {
 
             @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
             @Override
@@ -123,7 +118,7 @@ public abstract class LocalData {
     }
 
     public SmartPreferences getPreferences(){
-        return SmartPreferences.get(CONTEXT, DATA_NAME, Context.MODE_PRIVATE);
+        return SmartPreferences.get(mCtx, mName, Context.MODE_PRIVATE);
     }
 
     private void setForeignKeyConstraintsEnabled(SQLiteDatabase db, boolean enable) {
