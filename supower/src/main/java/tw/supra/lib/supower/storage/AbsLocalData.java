@@ -13,7 +13,7 @@ import java.lang.ref.WeakReference;
  * 本地数据虚基类；
  * <p/>
  * 包装SQLite和SharedPreferences两种本地数据持久化方案，按数据名称统一维护管理这两种数据的生命周期流程并简化他们的存取操作;
- * - 采用SmartPreferences包装来实现简单键值对数据的高效读写和自动存取异步IO;
+ * - 采用SmartPreferences包装类来实现简单键值数据的高效读写和自动存取异步IO, 并简化SharedPreferences的操作;
  * - 简化业务子类对SQLite数据库生命周期的维护成本，原则上仅关心数据库的打开、配置和升级过程，屏蔽数据库降级操作;
  * - 维护SQLiteOpenHelper初始化时的状态;避免出现SQLite DB在初始化时被锁，导致数据库初始化或升级失败的问题;
  * <p/>

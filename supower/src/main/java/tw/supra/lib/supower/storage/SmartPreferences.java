@@ -25,49 +25,68 @@ import java.util.Set;
 
 
 /**
- * Interface for accessing and modifying preference data returned by {@link
- * Context#getSharedPreferences}.  For any particular set of preferences,
- * there is a single instance of this class that all clients share.
- * Modifications to the preferences must go through an {@link SharedPreferences.Editor} object
- * to ensure the preference values remain in a consistent state and control
- * when they are committed to storage.  Objects that are returned from the
- * various <code>get</code> methods must be treated as immutable by the application.
- * <p/>
- * <p><em>Note: currently this class does not support use across multiple
- * processes.  This will be added later.</em>
- * <p/>
- * <div class="special reference">
- * <h3>Developer Guides</h3>
- * <p>For more information about using SharedPreferences, read the
- * <a href="{@docRoot}guide/topics/data/data-storage.html#pref">Data Storage</a>
- * developer guide.</p></div>
+ * SharedPreferences的包装类
+ * 通过对SharedPreferences的包装，来实现简单键值数据的高效读写和自动存取异步IO, 并简化其操作;
  *
- * @see Context#getSharedPreferences
+ * @see SharedPreferences
  * Created by supra on 16-1-11.
  */
 public final class SmartPreferences {
 
-    /** 上下文 */
+
+    // =================================================================================================================
+    // 成员定义
+    // =================================================================================================================
+
+    /**
+     * 上下文
+     */
     private final Context mCtx;
-    /** SharedPreferences名 */
+    /**
+     * SharedPreferences文件名
+     */
     private final String mName;
-    /** SharedPreferences对象的弱引用 */
+    /**
+     * SharedPreferences对象的弱引用
+     */
     private WeakReference<SharedPreferences> mWeakPref;
-    /** SharedPreferences Editor对象的弱引用 */
+    /**
+     * SharedPreferences Editor对象的弱引用
+     */
     private WeakReference<SharedPreferences.Editor> mWeakEditor;
-    /** Operating mode. */
+    /**
+     * Operating mode.
+     */
     private int mMode;
 
     /**
+     * 私有构造函数
+     *
+     * @param ctx  上下文
+     * @param name Preferences数据名
+     * @param mode Operating mode.
+     */
+    private SmartPreferences(Context ctx, String name, int mode) {
+        mCtx = ctx.getApplicationContext();
+        mName = name;
+        changeMode(mode);
+    }
+
+
+    // =================================================================================================================
+    // 静态方法
+    // =================================================================================================================
+
+    /**
      * Retrieve and hold the contents of the preferences file 'name', returning
-     * a SharedPreferences through which you can retrieve and modify its
-     * values.  Only one instance of the SharedPreferences object is returned
+     * a SmartPreferences through which you can retrieve and modify its
+     * values.  Only one instance of the SmartPreferences object is returned
      * to any callers for the same name, meaning they will see each other's
      * edits as soon as they are made.
-     * @param ctx 上下文
+     *
+     * @param ctx  上下文
      * @param name Desired preferences file. If a preferences file by this name
-     *             does not exist, it will be created when you retrieve an
-     *             editor (SharedPreferences.edit()) and then commit changes (Editor.commit()).
+     *             does not exist, it will be created when you put any values into.
      * @param mode Operating mode.  Use 0 or {@link Context#MODE_PRIVATE} for the
      *             default operation, {@link Context#MODE_WORLD_READABLE}
      *             and {@link Context#MODE_WORLD_WRITEABLE} to control permissions.  The bit
@@ -86,63 +105,22 @@ public final class SmartPreferences {
         return new SmartPreferences(ctx, name, mode);
     }
 
-    /**
-     * 私有构造函数
-     * @param ctx 上下文
-     * @param name Preferences数据名
-     * @param mode Operating mode.
-     */
-    private SmartPreferences(Context ctx, String name, int mode) {
-        mCtx = ctx.getApplicationContext();
-        mName = name;
-        changeMode(mode);
-    }
+
+    // =================================================================================================================
+    // 公有成员方法
+    // =================================================================================================================
 
     /**
      * 改变操作模式
+     *
      * @param mode Operating mode
      */
-    public void changeMode(int mode){
+    public void changeMode(int mode) {
         mMode = mode;
         mWeakPref.clear();
         mWeakEditor.clear();
     }
 
-    /**
-     * Retrieve and hold the contents of the preferences file 'name', returning
-     * a SharedPreferences through which you can retrieve and modify its
-     * values.  Only one instance of the SharedPreferences object is returned
-     * to any callers for the same name, meaning they will see each other's
-     * edits as soon as they are made.
-     *
-     * @return The single {@link SharedPreferences} instance that can be used
-     * to retrieve and modify the preference values.
-     */
-    private SharedPreferences getSharedPreferences() {
-        if (null == mWeakPref || null == mWeakPref.get()) {
-            mWeakPref = new WeakReference<>(mCtx.getSharedPreferences(mName, mMode));
-        }
-        return mWeakPref.get();
-    }
-
-    /**
-     * Create a new Editor for these preferences, through which you can make
-     * modifications to the data in the preferences and atomically commit those
-     * changes back to the SharedPreferences object.
-     * <p/>
-     * <p>Note that you <em>must</em> call {@link SharedPreferences.Editor#commit} to have any
-     * changes you perform in the Editor actually show up in the
-     * SharedPreferences.
-     *
-     * @return Returns a new instance of the {@link SharedPreferences.Editor} interface, allowing
-     * you to modify the values in this SharedPreferences object.
-     */
-    private SharedPreferences.Editor edit() {
-        if (null == mWeakEditor || null == mWeakEditor.get()) {
-            mWeakEditor = new WeakReference<>(getSharedPreferences().edit());
-        }
-        return mWeakEditor.get();
-    }
 
     /**
      * Set a String value in the preferences editor, to be written back once
@@ -407,4 +385,46 @@ public final class SmartPreferences {
     public void unregisterOnSharedPreferenceChangeListener(SharedPreferences.OnSharedPreferenceChangeListener l) {
         getSharedPreferences().unregisterOnSharedPreferenceChangeListener(l);
     }
+
+
+    // =================================================================================================================
+    // 私有有成员方法
+    // =================================================================================================================
+
+    /**
+     * Retrieve and hold the contents of the preferences file 'name', returning
+     * a SharedPreferences through which you can retrieve and modify its
+     * values.  Only one instance of the SharedPreferences object is returned
+     * to any callers for the same name, meaning they will see each other's
+     * edits as soon as they are made.
+     *
+     * @return The single {@link SharedPreferences} instance that can be used
+     * to retrieve and modify the preference values.
+     */
+    private SharedPreferences getSharedPreferences() {
+        if (null == mWeakPref || null == mWeakPref.get()) {
+            mWeakPref = new WeakReference<>(mCtx.getSharedPreferences(mName, mMode));
+        }
+        return mWeakPref.get();
+    }
+
+    /**
+     * Create a new Editor for these preferences, through which you can make
+     * modifications to the data in the preferences and atomically commit those
+     * changes back to the SharedPreferences object.
+     * <p/>
+     * <p>Note that you <em>must</em> call {@link SharedPreferences.Editor#commit} to have any
+     * changes you perform in the Editor actually show up in the
+     * SharedPreferences.
+     *
+     * @return Returns a new instance of the {@link SharedPreferences.Editor} interface, allowing
+     * you to modify the values in this SharedPreferences object.
+     */
+    private SharedPreferences.Editor edit() {
+        if (null == mWeakEditor || null == mWeakEditor.get()) {
+            mWeakEditor = new WeakReference<>(getSharedPreferences().edit());
+        }
+        return mWeakEditor.get();
+    }
+
 }
