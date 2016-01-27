@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package tw.supra.lib.supower.data;
+package tw.supra.lib.supower.storage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -47,17 +47,16 @@ import java.util.Set;
  */
 public final class SmartPreferences {
 
-    public final Context mCtx;
-    public final String mName;
+    /** 上下文 */
+    private final Context mCtx;
+    /** SharedPreferences名 */
+    private final String mName;
+    /** SharedPreferences对象的弱引用 */
     private WeakReference<SharedPreferences> mWeakPref;
+    /** SharedPreferences Editor对象的弱引用 */
     private WeakReference<SharedPreferences.Editor> mWeakEditor;
+    /** Operating mode. */
     private int mMode;
-
-    private SmartPreferences(Context ctx, String name, int mode) {
-        mCtx = ctx.getApplicationContext();
-        mName = name;
-        mMode = mode;
-    }
 
     /**
      * Retrieve and hold the contents of the preferences file 'name', returning
@@ -88,6 +87,28 @@ public final class SmartPreferences {
     }
 
     /**
+     * 私有构造函数
+     * @param ctx 上下文
+     * @param name Preferences数据名
+     * @param mode Operating mode.
+     */
+    private SmartPreferences(Context ctx, String name, int mode) {
+        mCtx = ctx.getApplicationContext();
+        mName = name;
+        changeMode(mode);
+    }
+
+    /**
+     * 改变操作模式
+     * @param mode Operating mode
+     */
+    public void changeMode(int mode){
+        mMode = mode;
+        mWeakPref.clear();
+        mWeakEditor.clear();
+    }
+
+    /**
      * Retrieve and hold the contents of the preferences file 'name', returning
      * a SharedPreferences through which you can retrieve and modify its
      * values.  Only one instance of the SharedPreferences object is returned
@@ -97,9 +118,9 @@ public final class SmartPreferences {
      * @return The single {@link SharedPreferences} instance that can be used
      * to retrieve and modify the preference values.
      */
-    public SharedPreferences getSharedPreferences() {
+    private SharedPreferences getSharedPreferences() {
         if (null == mWeakPref || null == mWeakPref.get()) {
-            mWeakPref = new WeakReference<SharedPreferences>(mCtx.getSharedPreferences(mName, mMode));
+            mWeakPref = new WeakReference<>(mCtx.getSharedPreferences(mName, mMode));
         }
         return mWeakPref.get();
     }
@@ -118,7 +139,7 @@ public final class SmartPreferences {
      */
     private SharedPreferences.Editor edit() {
         if (null == mWeakEditor || null == mWeakEditor.get()) {
-            mWeakEditor = new WeakReference<SharedPreferences.Editor>(getSharedPreferences().edit());
+            mWeakEditor = new WeakReference<>(getSharedPreferences().edit());
         }
         return mWeakEditor.get();
     }
