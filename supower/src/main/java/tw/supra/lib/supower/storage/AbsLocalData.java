@@ -3,6 +3,7 @@ package tw.supra.lib.supower.storage;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.text.TextUtils;
@@ -14,7 +15,7 @@ import java.lang.ref.WeakReference;
  * <p/>
  * 包装SQLite和SharedPreferences两种本地数据持久化方案，按数据名称统一维护管理这两种数据的生命周期流程并简化他们的存取操作;
  * - 采用SmartPreferences包装类来实现简单键值数据的高效读写和自动存取异步IO, 并简化SharedPreferences的操作;
- * - 简化业务子类对SQLite数据库生命周期的维护成本，原则上仅关心数据库的打开、配置和升级过程，屏蔽数据库降级操作;
+ * - 简化业务子类对SQLite数据库生命周期的维护成本，原则上仅关心数据库的创建和升级过程，屏蔽数据库降级操作;
  * - 维护SQLiteOpenHelper初始化时的状态;避免出现SQLite DB在初始化时被锁，导致数据库初始化或升级失败的问题;
  * <p/>
  * 具体业务可继承该类定义和实现所需的数据结构
@@ -136,6 +137,10 @@ public abstract class AbsLocalData implements LocalData<SmartPreferences> {
         return mVersion;
     }
 
+    public Context getContext(){
+        return mCtx;
+    }
+
     /**
      * 在SQLiteOpenHelper初始化期间，返回初始化时的临时数据库，避免初始化时死锁；
      * {@link LocalData#getDb()}
@@ -222,6 +227,29 @@ public abstract class AbsLocalData implements LocalData<SmartPreferences> {
      */
     protected abstract void onDbUpgrade(SQLiteDatabase db, int oldVersion, int newVersion);
 
+
+    /**
+     * Called when the database needs to be downgraded. This is strictly similar to
+     * {@link #onDbUpgrade} method, but is called whenever current version is newer than requested one.
+     * However, this method is not abstract, so it is not mandatory for a customer to
+     * implement it. If not overridden, default implementation will reject downgrade and
+     * throws SQLiteException
+     *
+     * <p>
+     * This method executes within a transaction.  If an exception is thrown, all changes
+     * will automatically be rolled back.
+     * </p>
+     *
+     * @param db The database.
+     * @param oldVersion The old database version.
+     * @param newVersion The new database version.
+     */
+    private void onDbDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        throw new SQLiteException("Can't downgrade database from version " +
+                oldVersion + " to " + newVersion);
+    }
+
+
     /**
      * 懒构造方式得到数据对应的SQLiteOpenHelper对象
      *
@@ -269,13 +297,20 @@ public abstract class AbsLocalData implements LocalData<SmartPreferences> {
             }
 
             @Override
+            public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+                mTmpDbOnInitializing = db;
+                super.onDowngrade(db, oldVersion, newVersion);
+                onDbDowngrade(db, oldVersion, newVersion);
+                mTmpDbOnInitializing = null;
+            }
+
+            @Override
             public void onOpen(SQLiteDatabase db) {
                 super.onOpen(db);
                 mTmpDbOnInitializing = db;
-                // if (!db.isReadOnly()) {
-                // // Enable foreign key constraints
-                // db.execSQL(DataDef.ENABLE_DB_FOREIGN_KEY);
-                // }
+                if (db.isReadOnly()) {
+                    throw new IllegalStateException("the db could not be read only");
+                }
                 onDbOpen(db);
                 mTmpDbOnInitializing = null;
             }
