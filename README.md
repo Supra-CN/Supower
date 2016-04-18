@@ -21,6 +21,8 @@
 
 
 ## usage
+
+
 ### 初始化**Supower**框架
 ```
 public class App extends Application {
@@ -41,6 +43,23 @@ ModelManager modelManager = Supra.getControler(ModelManager.class);
 UserIdentifier uIdentifier = new UserIdentifier(userId);
 // 获得用户实例；
 User user = modelManager.getObj(uIdentifier);
+```
+
+## Quick Start
+Supower is available as an AAR, so you just need to add the following dependency to your `build.gradle`.
+```
+buildscript {
+    repositories {
+        jcenter()
+        maven {url 'https://dl.bintray.com/supra-cn/maven'}
+    }
+}
+...
+
+dependencies {
+     compile 'tw.supra.lib:supower:+'
+}
+...
 ```
 
 # Developed By
