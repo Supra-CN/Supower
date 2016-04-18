@@ -24,9 +24,8 @@ apply plugin: 'com.github.dcendents.android-maven'
 //}
 
 
-group = 'tw.supra.lib.supower'                               // Maven Group ID for the artifact
-version = '0.1.0'
-
+group = 'tw.supra.lib'                               // Maven Group ID for the artifact
+version = '0.1.7'
 
 android {
     compileSdkVersion 23
@@ -50,7 +49,8 @@ android {
 
 
 def siteUrl = 'https://github.com/Supra-CN/Supower'      // Homepage URL of the library
-def gitUrl = 'git@github.com:Supra-CN/Supower.git'       // Git repository URL
+def gitUrl = 'https://github.com/Supra-CN/Supower.git'       // Git repository URL
+def issueUrl = 'https://github.com/Supra-CN/Supower/issues'       // issueUrl URL
 
 
 install {
@@ -63,9 +63,9 @@ install {
             url siteUrl
             inceptionYear '2016'
             packaging 'aar'
-            groupId 'tw.supra.lib.supower'
+            groupId 'tw.supra.lib'
             artifactId 'supower'
-            version '0.1.0'
+            version '0.1.7'
 
             // Set your license
             licenses {
@@ -107,14 +107,16 @@ bintray {
 //        userOrg = 'Supra\'s Garage'
         websiteUrl = siteUrl
         vcsUrl = gitUrl
+        issueTrackerUrl = issueUrl
         licenses = ['Apache-2.0']
-//        publish = true
+        dryRun = true //Whether to run this as dry-run, without deploying
+//        publish = true //If version should be auto published after an upload
         version {
-            name = '0.1.0'
-            desc = '0.1.0'
+            name = '0.1.7'
+            desc = '0.1.7'
 //            released = new Date()
-            vcsTag = '0.1.0'
-            attributes = ['supower': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
+            vcsTag = 'v0.1.7'
+//            attributes = ['supower': 'tw.supra.lib.supower:supower']
         }
     }
 }
@@ -124,4 +126,28 @@ dependencies {
     compile 'dev.dworks.libs:volleyplus:+'
     compile 'com.android.support:support-annotations:23.1.1'
     compile 'com.android.support:appcompat-v7:23.1.1'
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+task findConventions << {
+    println project.getConvention()
 }
