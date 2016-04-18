@@ -1,4 +1,8 @@
 # Supower
+
+[![Build Status](https://travis-ci.org/Supra-CN/Supower.svg?branch=master)](https://travis-ci.org/Supra-CN/Supower) 
+[ ![Download](https://api.bintray.com/packages/supra-cn/maven/tw.supra.lib.supower/images/download.svg) ](https://bintray.com/supra-cn/maven/tw.supra.lib.supower/_latestVersion) 
+
 **__Supra powered framework lib for android;__**
 
 **__Supower Android开发框架；__**
