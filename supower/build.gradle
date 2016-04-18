@@ -38,6 +38,7 @@ android {
         versionCode 1
         versionName version
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -45,6 +46,9 @@ android {
         }
     }
 
+    lintOptions {
+        abortOnError false
+    }
 }
 
 
@@ -130,7 +134,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'dev.dworks.libs:volleyplus:+'
     compile 'com.android.support:support-annotations:23.1.0'
-    compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.android.support:appcompat-v7:23.1.0';
 }
 
 task sourcesJar(type: Jar) {
