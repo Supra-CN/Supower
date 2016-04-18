@@ -55,7 +55,6 @@ Supower is available as an AAR, so you just need to add the following dependency
 buildscript {
     repositories {
         jcenter()
-        maven {url 'https://dl.bintray.com/supra-cn/maven'}
     }
 }
 ...
