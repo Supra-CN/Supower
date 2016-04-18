@@ -21,7 +21,7 @@ public interface LocalData<P> {
     int getVersion();
 
     /**
-     * 获得刻度写的关系型数据库对象
+     * 获得可读写的关系型数据库对象
      *
      * @return 本地数据的db对象
      */

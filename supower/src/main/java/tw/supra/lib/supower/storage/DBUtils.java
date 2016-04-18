@@ -23,6 +23,14 @@ public class DBUtils {
      */
     private static final String SQL_DISABLE_DB_FOREIGN_KEY = "PRAGMA foreign_keys=OFF;";
 
+
+    /**
+     * 私有构造方法
+     */
+    private DBUtils() {
+    }
+
+
     /**
      * 检查Cursor对象是否有效且非空
      *
