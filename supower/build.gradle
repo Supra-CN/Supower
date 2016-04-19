@@ -99,7 +99,7 @@ install {
 Properties properties = new Properties()
 boolean isHasFile = false
 
-if (project.rootProject.findProject('local.properties') != null){
+if (project.rootProject.file('local.properties') != null){
     isHasFile = true
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
 }
@@ -118,8 +118,8 @@ bintray {
         vcsUrl = gitUrl
         issueTrackerUrl = issueUrl
         licenses = ['Apache-2.0']
-        dryRun = true //Whether to run this as dry-run, without deploying
-//        publish = true //If version should be auto published after an upload
+        dryRun = false //Whether to run this as dry-run, without deploying
+        publish = true //If version should be auto published after an upload
         version {
             name = '0.1.7'
             desc = '0.1.7'
