@@ -99,7 +99,7 @@ install {
 Properties properties = new Properties()
 boolean isHasFile = false
 
-if (project.rootProject.file('local.properties') != null){
+if (project.rootProject.file('local.properties').exists()){
     isHasFile = true
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
 }
