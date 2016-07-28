@@ -25,16 +25,16 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 
 group = 'tw.supra.lib'                               // Maven Group ID for the artifact
-version = '0.1.7'
+version = '0.1.8'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.1'
+    compileSdkVersion 24
+    buildToolsVersion '24.0.0'
     resourcePrefix "supower__"
 
     defaultConfig {
-        minSdkVersion 23
-        targetSdkVersion 23
+        minSdkVersion 16
+        targetSdkVersion 24
         versionCode 1
         versionName version
     }
@@ -48,6 +48,10 @@ android {
 
     lintOptions {
         abortOnError false
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 }
 
@@ -69,7 +73,7 @@ install {
             packaging 'aar'
             groupId 'tw.supra.lib'
             artifactId 'supower'
-            version '0.1.7'
+            version '0.1.8'
 
             // Set your license
             licenses {
@@ -121,10 +125,10 @@ bintray {
         dryRun = false //Whether to run this as dry-run, without deploying
         publish = true //If version should be auto published after an upload
         version {
-            name = '0.1.7'
-            desc = '0.1.7'
+            name = '0.1.8'
+            desc = '0.1.8'
 //            released = new Date()
-            vcsTag = 'v0.1.7'
+            vcsTag = 'v0.1.8'
 //            attributes = ['supower': 'tw.supra.lib.supower:supower']
         }
     }
@@ -134,7 +138,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'dev.dworks.libs:volleyplus:+'
     compile 'com.android.support:support-annotations:23.1.0'
-    compile 'com.android.support:appcompat-v7:23.1.0';
+    compile 'com.android.support:appcompat-v7:23.1.0'
 }
 
 task sourcesJar(type: Jar) {
