@@ -1,7 +1,6 @@
 package tw.supra.lib.supower.network;
 
-
-import com.android.volley.error.VolleyError;
+import com.android.volley.VolleyError;
 
 public class ErrorFlag {
     public static final int OK = 0;

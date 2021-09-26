@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'com.github.dcendents.android-maven'
+//apply plugin: 'com.jfrog.bintray'
+//apply plugin: 'com.github.dcendents.android-maven'
 
 //ext {
 //    // Where you will see your artifact in Bintray's web interface
@@ -28,12 +28,12 @@ group = 'tw.supra.lib'                               // Maven Group ID for the a
 version = '0.1.8'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.3'
+    compileSdkVersion 31
+    buildToolsVersion '31.0.0'
     resourcePrefix "supower__"
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 31
         versionCode 1
         versionName version
     }
@@ -60,44 +60,44 @@ def gitUrl = 'https://github.com/Supra-CN/Supower.git'       // Git repository U
 def issueUrl = 'https://github.com/Supra-CN/Supower/issues'       // issueUrl URL
 
 
-install {
-    repositories.mavenInstaller {
-        // This generates POM.xml with proper parameters
-        pom.project {
-            // Add your description here
-            description 'Supra powered framework lib for android'
-            name 'supower'
-            url siteUrl
-            inceptionYear '2016'
-            packaging 'aar'
-            groupId 'tw.supra.lib'
-            artifactId 'supower'
-            version '0.1.8'
-
-            // Set your license
-            licenses {
-                license {
-                    name 'The Apache Software License, Version 2.0'
-                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                }
-            }
-            developers {
-                developer {
-                    id 'Supra.CN@Gmail.com'
-                    name 'Supra Wang'
-                    email 'Supra.CN@Gmail.com'
-                }
-            }
-            scm {
-                connection gitUrl
-                developerConnection gitUrl
-                url siteUrl
-
-            }
-        }
-    }
-
-}
+//install {
+//    repositories.mavenInstaller {
+//        // This generates POM.xml with proper parameters
+//        pom.project {
+//            // Add your description here
+//            description 'Supra powered framework lib for android'
+//            name 'supower'
+//            url siteUrl
+//            inceptionYear '2016'
+//            packaging 'aar'
+//            groupId 'tw.supra.lib'
+//            artifactId 'supower'
+//            version '0.1.8'
+//
+//            // Set your license
+//            licenses {
+//                license {
+//                    name 'The Apache Software License, Version 2.0'
+//                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//                }
+//            }
+//            developers {
+//                developer {
+//                    id 'Supra.CN@Gmail.com'
+//                    name 'Supra Wang'
+//                    email 'Supra.CN@Gmail.com'
+//                }
+//            }
+//            scm {
+//                connection gitUrl
+//                developerConnection gitUrl
+//                url siteUrl
+//
+//            }
+//        }
+//    }
+//
+//}
 
 Properties properties = new Properties()
 boolean isHasFile = false
@@ -107,37 +107,37 @@ if (project.rootProject.file('local.properties').exists()){
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
 }
 
-bintray {
-    user = isHasFile ? properties.getProperty("bintray.user") : System.getenv("bintray.user")
-    key = isHasFile ? properties.getProperty("bintray.apikey") : System.getenv("bintray.apikey")
-//    println('bintray: user=' + user + ' key=' + key);
-
-    configurations = ['archives']
-    pkg {
-        repo = 'maven'
-        name = 'tw.supra.lib.supower'
-//        userOrg = 'Supra\'s Garage'
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        issueTrackerUrl = issueUrl
-        licenses = ['Apache-2.0']
-        dryRun = false //Whether to run this as dry-run, without deploying
-        publish = true //If version should be auto published after an upload
-        version {
-            name = '0.1.8'
-            desc = '0.1.8'
-//            released = new Date()
-            vcsTag = 'v0.1.8'
-//            attributes = ['supower': 'tw.supra.lib.supower:supower']
-        }
-    }
-}
+//bintray {
+//    user = isHasFile ? properties.getProperty("bintray.user") : System.getenv("bintray.user")
+//    key = isHasFile ? properties.getProperty("bintray.apikey") : System.getenv("bintray.apikey")
+////    println('bintray: user=' + user + ' key=' + key);
+//
+//    configurations = ['archives']
+//    pkg {
+//        repo = 'maven'
+//        name = 'tw.supra.lib.supower'
+////        userOrg = 'Supra\'s Garage'
+//        websiteUrl = siteUrl
+//        vcsUrl = gitUrl
+//        issueTrackerUrl = issueUrl
+//        licenses = ['Apache-2.0']
+//        dryRun = false //Whether to run this as dry-run, without deploying
+//        publish = true //If version should be auto published after an upload
+//        version {
+//            name = '0.1.8'
+//            desc = '0.1.8'
+////            released = new Date()
+//            vcsTag = 'v0.1.8'
+////            attributes = ['supower': 'tw.supra.lib.supower:supower']
+//        }
+//    }
+//}
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'dev.dworks.libs:volleyplus:+'
-    compile 'com.android.support:support-annotations:23.1.0'
-    compile 'com.android.support:appcompat-v7:23.1.0'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.volley:volley:1.2.0'
+    implementation 'com.android.support:support-annotations:28.0.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
 }
 
 task sourcesJar(type: Jar) {
@@ -160,6 +160,6 @@ artifacts {
     archives sourcesJar
 }
 
-task findConventions << {
-    println project.getConvention()
-}
+//task findConventions << {
+//    println project.getConvention()
+//}

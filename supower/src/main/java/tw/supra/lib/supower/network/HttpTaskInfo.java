@@ -1,9 +1,8 @@
 package tw.supra.lib.supower.network;
 
-import com.android.volley.error.AuthFailureError;
+import com.android.volley.AuthFailureError;
 
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -20,17 +19,17 @@ public abstract class HttpTaskInfo extends UriBaseInfo {
 
     @Override
     public String toString() {
-        return String.format("%s:  Method = %d \n URL = %s \n ", getClass().getSimpleName(),
+        return String.format(Locale.getDefault(), "%s:  Method = %d \n URL = %s \n ", getClass().getSimpleName(),
                 getRequestMethod(), getRequestUri());
     }
 
     /**
      * Returns a Map of parameters to be used for a POST or PUT request.  Can throw
-     * {@link com.android.volley.error.AuthFailureError} as authentication may be required to provide these values.
+     * {@link AuthFailureError} as authentication may be required to provide these values.
      *
-     * @throws com.android.volley.error.AuthFailureError in the event of auth failure
+     * @throws AuthFailureError in the event of auth failure
      */
-   abstract protected Map<String, String> getPostParams() throws AuthFailureError ;
+   abstract protected Map<String, String> getPostParams() throws AuthFailureError;
 
 
 }
