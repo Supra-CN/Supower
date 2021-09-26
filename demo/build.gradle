@@ -5,7 +5,7 @@ android {
     buildToolsVersion '31.0.0'
 
     defaultConfig {
-        applicationId "tw.supra.lib.supowersimple"
+        applicationId "tw.supra.lib.supower.demo"
         minSdkVersion 23
         targetSdkVersion 31
         versionCode 1

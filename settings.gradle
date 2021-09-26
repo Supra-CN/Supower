@@ -1,1 +1,1 @@
-include ':supower', ':supower_simple'
+include ':supower', ':demo'

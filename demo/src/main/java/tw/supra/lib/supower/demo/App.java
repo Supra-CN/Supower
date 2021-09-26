@@ -1,4 +1,4 @@
-package tw.supra.lib.supowersimple;
+package tw.supra.lib.supower.demo;
 
 import android.app.Application;
 
